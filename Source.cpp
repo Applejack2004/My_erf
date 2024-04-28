@@ -1,6 +1,7 @@
 #include <iostream>
 #include <riscv-vector.h>
 #include <random>
+#include <stdio.h>
 vfloat32m4_t my_erf0(vfloat32m4_t x, int vl)
 {
     float a1 = (float)0.254829592;
@@ -50,7 +51,7 @@ int main()
     std::uniform_real_distribution<float> dist1(-5.0f, 10.0f);
     float* S0 = new float[16];
     float* my_erf = new float[16];
-    float* erf = new float[16];
+    float* erfmas = new float[16];
 
     for (int i = 0; i < 16; i++)
     {
@@ -59,21 +60,21 @@ int main()
     }
 
     vfloat32m4_t so = vle_v_f32m4(S0, 16);
-    vfloat32m4_t exp_val = my_erf0(S0, 16);
-    vse_v_f32m4(my_exponent, exp_val, 16);
+    vfloat32m4_t erf_val = my_erf0(S0, 16);
+    vse_v_f32m4(my_erf, erf_val, 16);
 
     for (int i = 0; i < 16; i++)
     {
-        exponent[i] = erf(S0[i]);
+        erfmas[i] = erf(S0[i]);
     }
     float* diff = new float[16];
     float max_diff = 0.0f;
     for (int i = 0; i < 16; i++)
     {
-        diff[i] = abs(my_erf[i] - erf[i]);
+        diff[i] = abs(my_erf[i] - erfmas[i]);
         if (diff[i] > max_diff) max_diff = diff[i];
-        printf("x=%.12ef\nmy_erf=%.12ef\nerf=%.12ef\ndiff=%i  max_diff=%i\n",
-            S0[i], my_erf[i], erf[i], diff[i], max_diff);
+        printf("x=%.12ef\nmy_erf=%.12ef\nerf=%.12ef\ndiff=%.12ef  max_diff=%.12ef\n",
+            S0[i], my_erf[i], erfmas[i], diff[i], max_diff);
     }
 
 
