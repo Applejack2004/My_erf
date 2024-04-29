@@ -2,6 +2,7 @@
 #include <riscv-vector.h>
 #include <random>
 #include <stdio.h>
+#include <cmath>
 void FLOAT2INT(vfloat32m4_t& f, vfloat32m4_t& rf, vint32m4_t& fint, int _vl)
 {
     vfloat32m4_t tmp = vfadd_vf_f32m4(f, 12582912.0f, _vl);
